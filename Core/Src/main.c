@@ -103,6 +103,18 @@ void led_set(int led, bool turn_on)
 	}
 
 }
+
+bool is_button_pressed(void)
+{
+	if (HAL_GPIO_ReadPin(USER_BUTTON_GPIO_Port, USER_BUTTON_Pin) == GPIO_PIN_RESET)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
 /* USER CODE END 0 */
 
 /**
@@ -135,7 +147,9 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
-
+  int led = 0;
+  //Zapalamy pierwszą diodę
+  led_set(led, true);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -171,12 +185,33 @@ int main(void)
 	  }
 	  */
 
+	  /*
 	  for(int i = 0; i < 10; i++)
 	  {
 		  led_set(i, true);
 		  HAL_Delay(100);
 		  led_set(i, false);
 	  }
+	  */
+
+	  if (is_button_pressed())
+	  {
+		  //Gasimy diodę po wciśnięciu przycisku
+		  led_set(led, false);
+		  led++;
+		  if (led >= 10)
+		  {
+			  led = 0;
+		  }
+		  //Zapalamy następną diodę po wciśnięciu przycisku
+		  led_set(led, true);
+		  //Czekamy na zwolnienie przycisku
+		  while (is_button_pressed())
+		  {
+
+		  }
+	  }
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
