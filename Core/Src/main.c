@@ -21,7 +21,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include <stdbool.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -54,7 +54,60 @@ static void MX_GPIO_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+void led_set(int led, bool turn_on)
+{
+	GPIO_PinState state;
 
+	if (turn_on)
+	{
+		state = GPIO_PIN_SET;
+	}
+	else
+	{
+		state = GPIO_PIN_RESET;
+	}
+
+	/*
+	if (led >= 0 && led < 10)
+	{
+		HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin << led, state);
+	}
+	*/
+
+	switch(led)
+	{
+	case 0:
+		HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, state);
+		break;
+	case 1:
+		HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, state);
+		break;
+	case 2:
+		HAL_GPIO_WritePin(LED3_GPIO_Port, LED3_Pin, state);
+		break;
+	case 3:
+		HAL_GPIO_WritePin(LED4_GPIO_Port, LED4_Pin, state);
+		break;
+	case 4:
+		HAL_GPIO_WritePin(LED5_GPIO_Port, LED5_Pin, state);
+		break;
+	case 5:
+		HAL_GPIO_WritePin(LED6_GPIO_Port, LED6_Pin, state);
+		break;
+	case 6:
+		HAL_GPIO_WritePin(LED7_GPIO_Port, LED7_Pin, state);
+		break;
+	case 7:
+		HAL_GPIO_WritePin(LED8_GPIO_Port, LED8_Pin, state);
+		break;
+	case 8:
+		HAL_GPIO_WritePin(LED9_GPIO_Port, LED9_Pin, state);
+		break;
+	case 9:
+		HAL_GPIO_WritePin(LED10_GPIO_Port, LED10_Pin, state);
+		break;
+	}
+}
 /* USER CODE END 0 */
 
 /**
@@ -115,10 +168,19 @@ int main(void)
 	  HAL_Delay(800);
 	  */
 
+	  /*
 	  for(int i = 0; i < 10; i++) {
 		  HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin << i, GPIO_PIN_SET);
 		  HAL_Delay(100);
 		  HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin << i, GPIO_PIN_RESET);
+	  }
+	  */
+
+	  for(int i = 0; i < 10; i++)
+	  {
+		  led_set(i, true);
+		  HAL_Delay(100);
+		  led_set(i, false);
 	  }
     /* USER CODE END WHILE */
 
