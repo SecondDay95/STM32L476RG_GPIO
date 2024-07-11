@@ -104,16 +104,35 @@ void led_set(int led, bool turn_on)
 
 }
 
-bool is_button_pressed(void)
+bool is_button_pressed(int button)
 {
-	if (HAL_GPIO_ReadPin(USER_BUTTON_GPIO_Port, USER_BUTTON_Pin) == GPIO_PIN_RESET)
+	switch (button)
 	{
-		return true;
-	}
-	else
-	{
+	case 0:
+		if (HAL_GPIO_ReadPin(USER_BUTTON_GPIO_Port, USER_BUTTON_Pin) == GPIO_PIN_RESET)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+		break;
+	case 1:
+		if (HAL_GPIO_ReadPin(USER_BUTTON2_GPIO_Port, USER_BUTTON2_Pin) == GPIO_PIN_RESET)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+		break;
+	default:
 		return false;
+		break;
 	}
+
 }
 /* USER CODE END 0 */
 
@@ -194,7 +213,7 @@ int main(void)
 	  }
 	  */
 
-	  if (is_button_pressed())
+	  if (is_button_pressed(0))
 	  {
 		  //Gasimy diodę po wciśnięciu przycisku
 		  led_set(led, false);
@@ -206,12 +225,33 @@ int main(void)
 		  //Zapalamy następną diodę po wciśnięciu przycisku
 		  led_set(led, true);
 		  //Czekamy na zwolnienie przycisku
-		  while (is_button_pressed())
+		  while (is_button_pressed(0))
 		  {
 
 		  }
 	  }
 
+	  if (is_button_pressed(1))
+	  {
+		  led_set(led, false);
+		  led--;
+		  if (led < 0)
+		  {
+			  led = 9;
+		  }
+		  led_set(led, true);
+
+		  //Oczekiwanie na ustanie drgań styków przy przyciśnięciu przycisku:
+		  HAL_Delay(20);
+
+		  while (is_button_pressed(1))
+		  {
+
+		  }
+
+		  //Oczekiwanie na ustanie drga ń styków przy puszczaniu przycisku:
+		  HAL_Delay(20);
+	  }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -310,6 +350,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : USER_BUTTON2_Pin */
+  GPIO_InitStruct.Pin = USER_BUTTON2_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(USER_BUTTON2_GPIO_Port, &GPIO_InitStruct);
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */
