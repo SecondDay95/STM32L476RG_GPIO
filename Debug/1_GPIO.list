@@ -7,45 +7,45 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
   1 .text         000016ac  08000188  08000188  00001188  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .rodata       0000007c  08001834  08001834  00002834  2**2
+  2 .rodata       00000090  08001834  08001834  00002834  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  3 .ARM.extab    00000000  080018b0  080018b0  0000300c  2**0
+  3 .ARM.extab    00000000  080018c4  080018c4  0000300c  2**0
                   CONTENTS
-  4 .ARM          00000000  080018b0  080018b0  0000300c  2**0
+  4 .ARM          00000000  080018c4  080018c4  0000300c  2**0
                   CONTENTS
-  5 .preinit_array 00000000  080018b0  080018b0  0000300c  2**0
+  5 .preinit_array 00000000  080018c4  080018c4  0000300c  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  6 .init_array   00000004  080018b0  080018b0  000028b0  2**2
+  6 .init_array   00000004  080018c4  080018c4  000028c4  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  7 .fini_array   00000004  080018b4  080018b4  000028b4  2**2
+  7 .fini_array   00000004  080018c8  080018c8  000028c8  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  8 .data         0000000c  20000000  080018b8  00003000  2**2
+  8 .data         0000000c  20000000  080018cc  00003000  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  9 .bss          00000020  2000000c  080018c4  0000300c  2**2
+  9 .bss          00000020  2000000c  080018d8  0000300c  2**2
                   ALLOC
- 10 ._user_heap_stack 00000604  2000002c  080018c4  0000302c  2**0
+ 10 ._user_heap_stack 00000604  2000002c  080018d8  0000302c  2**0
                   ALLOC
  11 .ARM.attributes 00000030  00000000  00000000  0000300c  2**0
                   CONTENTS, READONLY
- 12 .debug_info   00004676  00000000  00000000  0000303c  2**0
+ 12 .debug_info   00004693  00000000  00000000  0000303c  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 13 .debug_abbrev 000010a0  00000000  00000000  000076b2  2**0
+ 13 .debug_abbrev 000010a0  00000000  00000000  000076cf  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_aranges 000005a0  00000000  00000000  00008758  2**3
+ 14 .debug_aranges 000005a0  00000000  00000000  00008770  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_rnglists 00000418  00000000  00000000  00008cf8  2**0
+ 15 .debug_rnglists 00000418  00000000  00000000  00008d10  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_macro  00024219  00000000  00000000  00009110  2**0
+ 16 .debug_macro  00024219  00000000  00000000  00009128  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_line   00005d93  00000000  00000000  0002d329  2**0
+ 17 .debug_line   00005d94  00000000  00000000  0002d341  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    000de29c  00000000  00000000  000330bc  2**0
+ 18 .debug_str    000de296  00000000  00000000  000330d5  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000043  00000000  00000000  00111358  2**0
+ 19 .comment      00000043  00000000  00000000  0011136b  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  000014b0  00000000  00000000  0011139c  2**2
+ 20 .debug_frame  000014b0  00000000  00000000  001113b0  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 21 .debug_line_str 00000065  00000000  00000000  0011284c  2**0
+ 21 .debug_line_str 00000065  00000000  00000000  00112860  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -79,8 +79,8 @@ Disassembly of section .text:
  80001c4:	0800181c 	.word	0x0800181c
 
 080001c8 <led_set>:
-		LED1_Pin, LED2_Pin, LED3_Pin, LED4_Pin, LED5_Pin,
-		LED6_Pin, LED7_Pin, LED8_Pin, LED9_Pin, LED10_Pin
+	{ LED9_GPIO_Port, LED9_Pin },
+	{ LED10_GPIO_Port, LED10_Pin },
 };
 
 void led_set(int led, bool turn_on)
@@ -113,30 +113,32 @@ void led_set(int led, bool turn_on)
 	if (led >= 0 && led < 10)
  80001e4:	687b      	ldr	r3, [r7, #4]
  80001e6:	2b00      	cmp	r3, #0
- 80001e8:	db0e      	blt.n	8000208 <led_set+0x40>
+ 80001e8:	db0f      	blt.n	800020a <led_set+0x42>
  80001ea:	687b      	ldr	r3, [r7, #4]
  80001ec:	2b09      	cmp	r3, #9
- 80001ee:	dc0b      	bgt.n	8000208 <led_set+0x40>
+ 80001ee:	dc0c      	bgt.n	800020a <led_set+0x42>
 	{
-		HAL_GPIO_WritePin(LED_PORT[led], LED_PIN[led], state);
- 80001f0:	4a07      	ldr	r2, [pc, #28]	@ (8000210 <led_set+0x48>)
+		HAL_GPIO_WritePin(LED[led].port, LED[led].pin, state);
+ 80001f0:	4a08      	ldr	r2, [pc, #32]	@ (8000214 <led_set+0x4c>)
  80001f2:	687b      	ldr	r3, [r7, #4]
- 80001f4:	f852 0023 	ldr.w	r0, [r2, r3, lsl #2]
+ 80001f4:	f852 0033 	ldr.w	r0, [r2, r3, lsl #3]
  80001f8:	4a06      	ldr	r2, [pc, #24]	@ (8000214 <led_set+0x4c>)
  80001fa:	687b      	ldr	r3, [r7, #4]
- 80001fc:	f832 3013 	ldrh.w	r3, [r2, r3, lsl #1]
- 8000200:	7bfa      	ldrb	r2, [r7, #15]
- 8000202:	4619      	mov	r1, r3
- 8000204:	f000 fc9a 	bl	8000b3c <HAL_GPIO_WritePin>
+ 80001fc:	00db      	lsls	r3, r3, #3
+ 80001fe:	4413      	add	r3, r2
+ 8000200:	889b      	ldrh	r3, [r3, #4]
+ 8000202:	7bfa      	ldrb	r2, [r7, #15]
+ 8000204:	4619      	mov	r1, r3
+ 8000206:	f000 fc99 	bl	8000b3c <HAL_GPIO_WritePin>
 	}
 
 }
- 8000208:	bf00      	nop
- 800020a:	3710      	adds	r7, #16
- 800020c:	46bd      	mov	sp, r7
- 800020e:	bd80      	pop	{r7, pc}
- 8000210:	08001834 	.word	0x08001834
- 8000214:	0800185c 	.word	0x0800185c
+ 800020a:	bf00      	nop
+ 800020c:	3710      	adds	r7, #16
+ 800020e:	46bd      	mov	sp, r7
+ 8000210:	bd80      	pop	{r7, pc}
+ 8000212:	bf00      	nop
+ 8000214:	08001834 	.word	0x08001834
 
 08000218 <main>:
 /**
@@ -803,7 +805,7 @@ LoopForever:
   ldr r1, =_edata
  80004d8:	2000000c 	.word	0x2000000c
   ldr r2, =_sidata
- 80004dc:	080018b8 	.word	0x080018b8
+ 80004dc:	080018cc 	.word	0x080018cc
   ldr r2, =_sbss
  80004e0:	2000000c 	.word	0x2000000c
   ldr r4, =_ebss
@@ -2508,7 +2510,7 @@ HAL_StatusTypeDef HAL_RCC_OscConfig(RCC_OscInitTypeDef  *RCC_OscInitStruct)
  8000ea0:	e014      	b.n	8000ecc <HAL_RCC_OscConfig+0x298>
  8000ea2:	bf00      	nop
  8000ea4:	40021000 	.word	0x40021000
- 8000ea8:	08001870 	.word	0x08001870
+ 8000ea8:	08001884 	.word	0x08001884
  8000eac:	20000000 	.word	0x20000000
  8000eb0:	20000004 	.word	0x20000004
  8000eb4:	4ba0      	ldr	r3, [pc, #640]	@ (8001138 <HAL_RCC_OscConfig+0x504>)
@@ -3813,7 +3815,7 @@ HAL_StatusTypeDef HAL_RCC_ClockConfig(RCC_ClkInitTypeDef  *RCC_ClkInitStruct, ui
  80015d6:	bd80      	pop	{r7, pc}
  80015d8:	40022000 	.word	0x40022000
  80015dc:	40021000 	.word	0x40021000
- 80015e0:	08001870 	.word	0x08001870
+ 80015e0:	08001884 	.word	0x08001884
  80015e4:	20000000 	.word	0x20000000
  80015e8:	20000004 	.word	0x20000004
 
@@ -4018,7 +4020,7 @@ uint32_t HAL_RCC_GetSysClockFreq(void)
  80016f0:	4770      	bx	lr
  80016f2:	bf00      	nop
  80016f4:	40021000 	.word	0x40021000
- 80016f8:	08001880 	.word	0x08001880
+ 80016f8:	08001894 	.word	0x08001894
  80016fc:	00f42400 	.word	0x00f42400
  8001700:	007a1200 	.word	0x007a1200
 
@@ -4215,10 +4217,10 @@ static HAL_StatusTypeDef RCC_SetFlashLatencyFromMSIRange(uint32_t msirange)
  8001806:	4798      	blx	r3
  8001808:	3601      	adds	r6, #1
  800180a:	e7f2      	b.n	80017f2 <__libc_init_array+0x1e>
- 800180c:	080018b0 	.word	0x080018b0
- 8001810:	080018b0 	.word	0x080018b0
- 8001814:	080018b0 	.word	0x080018b0
- 8001818:	080018b4 	.word	0x080018b4
+ 800180c:	080018c4 	.word	0x080018c4
+ 8001810:	080018c4 	.word	0x080018c4
+ 8001814:	080018c4 	.word	0x080018c4
+ 8001818:	080018c8 	.word	0x080018c8
 
 0800181c <_init>:
  800181c:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
